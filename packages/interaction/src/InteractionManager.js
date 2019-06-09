@@ -875,8 +875,6 @@ export default class InteractionManager extends EventEmitter
         }
 
         this.setCursorMode(this.cursor);
-
-        // TODO
     }
 
     /**
@@ -1467,14 +1465,8 @@ export default class InteractionManager extends EventEmitter
 
             interactionEvent.data.originalEvent = originalEvent;
 
-            const interactive = event.pointerType === 'touch' ? this.moveWhenInside : true;
+            this.processInteractive(interactionEvent, this.renderer._lastObjectRendered, this.processPointerMove, true);
 
-            this.processInteractive(
-                interactionEvent,
-                this.renderer._lastObjectRendered,
-                this.processPointerMove,
-                interactive
-            );
             this.emit('pointermove', interactionEvent);
             if (event.pointerType === 'touch') this.emit('touchmove', interactionEvent);
             if (event.pointerType === 'mouse' || event.pointerType === 'pen') this.emit('mousemove', interactionEvent);
