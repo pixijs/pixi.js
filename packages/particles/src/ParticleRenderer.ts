@@ -156,6 +156,12 @@ export class ParticleRenderer extends ObjectRenderer
 
         const m = container.worldTransform.copyTo(this.tempMatrix);
 
+        if (container.roundPixels)
+        {
+            m.tx = Math.round(m.tx);
+            m.ty = Math.round(m.ty);
+        }
+
         m.prepend(renderer.globalUniforms.uniforms.projectionMatrix);
 
         this.shader.uniforms.translationMatrix = m.toArray(true);
@@ -257,6 +263,23 @@ export class ParticleRenderer extends ObjectRenderer
         array: number[], stride: number, offset: number
     ): void
     {
+        if (children.length === 0)
+        {
+            return;
+        }
+
+        const container = children[0].parent as ParticleContainer;
+        let sx;
+        let sy;
+
+        if (container.roundPixels)
+        {
+            const { a, b, c, d } = container.worldTransform;
+
+            sx = Math.sqrt((a * a) + (b * b));
+            sy = Math.sqrt((c * c) + (d * d));
+        }
+
         let w0 = 0;
         let w1 = 0;
         let h0 = 0;
@@ -266,8 +289,6 @@ export class ParticleRenderer extends ObjectRenderer
         {
             const sprite: any = children[startIndex + i];
             const texture = sprite._texture;
-            const sx = sprite.scale.x;
-            const sy = sprite.scale.y;
             const trim = texture.trim;
             const orig = texture.orig;
 
@@ -276,31 +297,47 @@ export class ParticleRenderer extends ObjectRenderer
                 // if the sprite is trimmed and is not a tilingsprite then we need to add the
                 // extra space before transforming the sprite coords..
                 w1 = trim.x - (sprite.anchor.x * orig.width);
-                w0 = w1 + trim.width;
+                w0 = trim.width;
 
                 h1 = trim.y - (sprite.anchor.y * orig.height);
-                h0 = h1 + trim.height;
+                h0 = trim.height;
             }
             else
             {
-                w0 = (orig.width) * (1 - sprite.anchor.x);
-                w1 = (orig.width) * -sprite.anchor.x;
+                w1 = -sprite.anchor.x * orig.width;
+                w0 = orig.width;
 
-                h0 = orig.height * (1 - sprite.anchor.y);
-                h1 = orig.height * -sprite.anchor.y;
+                h1 = -sprite.anchor.y * orig.height;
+                h0 = orig.height;
             }
 
-            array[offset] = w1 * sx;
-            array[offset + 1] = h1 * sy;
+            w0 *= sprite.scale.x;
+            w1 *= sprite.scale.x;
+            h0 *= sprite.scale.y;
+            h1 *= sprite.scale.y;
 
-            array[offset + stride] = w0 * sx;
-            array[offset + stride + 1] = h1 * sy;
+            if (container.roundPixels)
+            {
+                w0 = Math.round(w0 * sx) / sx;
+                w1 = Math.round(w1 * sx) / sx;
+                h0 = Math.round(h0 * sy) / sy;
+                h1 = Math.round(h1 * sy) / sy;
+            }
 
-            array[offset + (stride * 2)] = w0 * sx;
-            array[offset + (stride * 2) + 1] = h0 * sy;
+            w0 += w1;
+            h0 += h1;
 
-            array[offset + (stride * 3)] = w1 * sx;
-            array[offset + (stride * 3) + 1] = h0 * sy;
+            array[offset] = w1;
+            array[offset + 1] = h1;
+
+            array[offset + stride] = w0;
+            array[offset + stride + 1] = h1;
+
+            array[offset + (stride * 2)] = w0;
+            array[offset + (stride * 2) + 1] = h0;
+
+            array[offset + (stride * 3)] = w1;
+            array[offset + (stride * 3) + 1] = h0;
 
             offset += stride * 4;
         }

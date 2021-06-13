@@ -1,6 +1,7 @@
 import { BLEND_MODES } from '@pixi/constants';
 import { Container } from '@pixi/display';
 import { hex2rgb } from '@pixi/utils';
+import { settings } from '@pixi/settings';
 
 import type { BaseTexture, Renderer } from '@pixi/core';
 import type { ParticleBuffer } from './ParticleBuffer';
@@ -151,15 +152,15 @@ export class ParticleContainer extends Container
         this.autoResize = autoResize;
 
         /**
-         * If true PixiJS will Math.floor() x/y values when rendering, stopping pixel interpolation.
+         * If true PixiJS will Math.round() x/y values when rendering, stopping pixel interpolation.
          * Advantages can include sharper image quality (like text) and faster rendering on canvas.
          * The main disadvantage is movement of objects may appear less smooth.
-         * Default to true here as performance is usually the priority for particles.
+         * To set the global default, change {@link PIXI.settings.ROUND_PIXELS}.
          *
          * @member {boolean}
-         * @default true
+         * @default PIXI.settings.ROUND_PIXELS
          */
-        this.roundPixels = true;
+        this.roundPixels = settings.ROUND_PIXELS;
 
         /**
          * The texture used to render the children.

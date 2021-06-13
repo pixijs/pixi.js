@@ -32,6 +32,9 @@ ParticleContainer.prototype.renderCanvas = function renderCanvas(renderer: Canva
 
     this.displayObjectUpdateTransform();
 
+    let sx;
+    let sy;
+
     for (let i = 0; i < this.children.length; ++i)
     {
         const child = this.children[i] as Sprite;
@@ -55,8 +58,16 @@ ParticleContainer.prototype.renderCanvas = function renderCanvas(renderer: Canva
             // this is the fastest  way to optimise! - if rotation is 0 then we can avoid any kind of setTransform call
             if (isRotated)
             {
-                renderer.setContextTransform(transform, false, 1);
+                renderer.setContextTransform(transform, this.roundPixels);
                 isRotated = false;
+
+                if (this.roundPixels)
+                {
+                    const { a, b, c, d } = transform;
+
+                    sx = Math.sqrt((a * a) + (b * b));
+                    sy = Math.sqrt((c * c) + (d * d));
+                }
             }
 
             positionX = ((child.anchor.x) * (-frame.width * child.scale.x)) + child.position.x + 0.5;
@@ -76,13 +87,34 @@ ParticleContainer.prototype.renderCanvas = function renderCanvas(renderer: Canva
 
             const childTransform = child.worldTransform;
 
-            renderer.setContextTransform(childTransform, this.roundPixels, 1);
+            renderer.setContextTransform(childTransform, this.roundPixels);
+
+            if (this.roundPixels)
+            {
+                const { a, b, c, d } = childTransform;
+
+                sx = Math.sqrt((a * a) + (b * b));
+                sy = Math.sqrt((c * c) + (d * d));
+            }
 
             positionX = ((child.anchor.x) * (-frame.width)) + 0.5;
             positionY = ((child.anchor.y) * (-frame.height)) + 0.5;
 
             finalWidth = frame.width;
             finalHeight = frame.height;
+        }
+
+        let dx = positionX;
+        let dy = positionY;
+        let dw = finalWidth;
+        let dh = finalHeight;
+
+        if (this.roundPixels)
+        {
+            dx = Math.round(dx * sx) / sx;
+            dy = Math.round(dy * sy) / sy;
+            dw = Math.round(dw * sx) / sx;
+            dh = Math.round(dh * sy) / sy;
         }
 
         const resolution = child._texture.baseTexture.resolution;
@@ -93,10 +125,10 @@ ParticleContainer.prototype.renderCanvas = function renderCanvas(renderer: Canva
             frame.y * resolution,
             frame.width * resolution,
             frame.height * resolution,
-            positionX * renderer.resolution,
-            positionY * renderer.resolution,
-            finalWidth * renderer.resolution,
-            finalHeight * renderer.resolution
+            dx,
+            dy,
+            dw,
+            dh
         );
     }
 };

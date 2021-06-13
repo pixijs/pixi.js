@@ -92,18 +92,43 @@ NineSlicePlane.prototype._renderCanvas = function _renderCanvas(renderer: Canvas
     renderer.setBlendMode(this.blendMode);
     renderer.setContextTransform(transform, this.roundPixels);
 
+    let sx;
+    let sy;
+
+    if (this.roundPixels)
+    {
+        const { a, b, c, d } = transform;
+
+        sx = Math.sqrt((a * a) + (b * b));
+        sy = Math.sqrt((c * c) + (d * d));
+    }
+
     for (let row = 0; row < 3; row++)
     {
         for (let col = 0; col < 3; col++)
         {
             const ind = (col * 2) + (row * 8);
-            const sw = Math.max(1, uvs[col + 1] - uvs[col]);
-            const sh = Math.max(1, uvs[row + 5] - uvs[row + 4]);
-            const dw = Math.max(1, vertices[ind + 10] - vertices[ind]);
-            const dh = Math.max(1, vertices[ind + 11] - vertices[ind + 1]);
+            let dx = vertices[ind];
+            let dy = vertices[ind + 1];
+            let dw = vertices[ind + 10] - dx;
+            let dh = vertices[ind + 11] - dy;
 
-            context.drawImage(textureSource, uvs[col], uvs[row + 4], sw, sh,
-                vertices[ind], vertices[ind + 1], dw, dh);
+            if (this.roundPixels)
+            {
+                dx = Math.round(dx * sx) / sx;
+                dy = Math.round(dy * sy) / sy;
+                dw = Math.round(dw * sx) / sx;
+                dh = Math.round(dh * sy) / sy;
+            }
+
+            {
+                const sx = uvs[col];
+                const sy = uvs[row + 4];
+                const sw = uvs[col + 1] - sx;
+                const sh = uvs[row + 5] - sy;
+
+                context.drawImage(textureSource, sx, sy, sw, sh, dx, dy, dw, dh);
+            }
         }
     }
 };

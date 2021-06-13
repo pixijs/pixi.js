@@ -195,6 +195,20 @@ export class CanvasMeshRenderer
         context.save();
         context.beginPath();
 
+        if (mesh.roundPixels)
+        {
+            const { a, b, c, d } = mesh.worldTransform;
+            const sx = Math.sqrt((a * a) + (b * b));
+            const sy = Math.sqrt((c * c) + (d * d));
+
+            x0 = Math.round(x0 * sx) / sx;
+            y0 = Math.round(y0 * sy) / sy;
+            x1 = Math.round(x1 * sx) / sx;
+            y1 = Math.round(y1 * sy) / sy;
+            x2 = Math.round(x2 * sx) / sx;
+            y2 = Math.round(y2 * sy) / sy;
+        }
+
         context.moveTo(x0, y0);
         context.lineTo(x1, y1);
         context.lineTo(x2, y2);

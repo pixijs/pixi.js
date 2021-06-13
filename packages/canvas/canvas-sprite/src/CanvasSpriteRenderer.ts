@@ -60,15 +60,12 @@ export class CanvasSpriteRenderer
         let wt = sprite.transform.worldTransform;
         let dx = 0;
         let dy = 0;
+        let dw = width;
+        let dh = height;
 
         const source = texture.baseTexture.getDrawableSource();
 
         if (texture.orig.width <= 0 || texture.orig.height <= 0 || !texture.valid || !source)
-        {
-            return;
-        }
-
-        if (!texture.valid)
         {
             return;
         }
@@ -110,12 +107,18 @@ export class CanvasSpriteRenderer
         dx -= width / 2;
         dy -= height / 2;
 
-        renderer.setContextTransform(wt, sprite.roundPixels, 1);
-        // Allow for pixel rounding
+        renderer.setContextTransform(wt, sprite.roundPixels);
+
         if (sprite.roundPixels)
         {
-            dx = dx | 0;
-            dy = dy | 0;
+            const { a, b, c, d } = wt;
+            const sx = Math.sqrt((a * a) + (b * b));
+            const sy = Math.sqrt((c * c) + (d * d));
+
+            dx = Math.round(dx * sx) / sx;
+            dy = Math.round(dy * sy) / sy;
+            dw = Math.round(dw * sx) / sx;
+            dh = Math.round(dh * sy) / sy;
         }
 
         const resolution = texture.baseTexture.resolution;
@@ -125,12 +128,7 @@ export class CanvasSpriteRenderer
         {
             context.save();
             context.beginPath();
-            context.rect(
-                dx * renderer.resolution,
-                dy * renderer.resolution,
-                width * renderer.resolution,
-                height * renderer.resolution
-            );
+            context.rect(dx, dy, dw, dh);
             context.clip();
         }
 
@@ -148,12 +146,12 @@ export class CanvasSpriteRenderer
                 sprite._tintedCanvas,
                 0,
                 0,
-                Math.floor(width * resolution),
-                Math.floor(height * resolution),
-                Math.floor(dx * renderer.resolution),
-                Math.floor(dy * renderer.resolution),
-                Math.floor(width * renderer.resolution),
-                Math.floor(height * renderer.resolution)
+                width * resolution,
+                height * resolution,
+                dx,
+                dy,
+                dw,
+                dh
             );
         }
         else
@@ -162,12 +160,12 @@ export class CanvasSpriteRenderer
                 source,
                 texture._frame.x * resolution,
                 texture._frame.y * resolution,
-                Math.floor(width * resolution),
-                Math.floor(height * resolution),
-                Math.floor(dx * renderer.resolution),
-                Math.floor(dy * renderer.resolution),
-                Math.floor(width * renderer.resolution),
-                Math.floor(height * renderer.resolution)
+                width * resolution,
+                height * resolution,
+                dx,
+                dy,
+                dw,
+                dh
             );
         }
 

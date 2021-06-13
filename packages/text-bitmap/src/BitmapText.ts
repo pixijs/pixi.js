@@ -210,7 +210,7 @@ export class BitmapText extends Container
         this._anchor = new ObservablePoint((): void => { this.dirty = true; }, this, 0, 0);
 
         /**
-         * If true PixiJS will Math.floor() x/y values when rendering
+         * If true PixiJS will Math.round() x/y values when rendering
          *
          * @member {boolean}
          * @default PIXI.settings.ROUND_PIXELS
@@ -840,10 +840,10 @@ export class BitmapText extends Container
     }
 
     /**
-     * If true PixiJS will Math.floor() x/y values when rendering, stopping pixel interpolation.
+     * If true PixiJS will Math.round() x/y values when rendering, stopping pixel interpolation.
      * Advantages can include sharper image quality (like text) and faster rendering on canvas.
      * The main disadvantage is movement of objects may appear less smooth.
-     * To set the global default, change {@link PIXI.settings.ROUND_PIXELS}
+     * To set the global default, change {@link PIXI.settings.ROUND_PIXELS}.
      *
      * @member {boolean}
      * @default PIXI.settings.ROUND_PIXELS

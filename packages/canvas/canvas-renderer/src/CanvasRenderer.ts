@@ -368,41 +368,31 @@ export class CanvasRenderer extends AbstractRenderer
      */
     setContextTransform(transform: Matrix, roundPixels?: boolean, localResolution?: number): void
     {
-        let mat = transform;
+        const mat = transform.copyTo(tempMatrix);
         const proj = this._projTransform;
         const resolution = this.resolution;
 
-        localResolution = localResolution || resolution;
-
-        if (proj)
-        {
-            mat = tempMatrix;
-            mat.copyFrom(transform);
-            mat.prepend(proj);
-        }
+        localResolution = localResolution || this.resolution;
 
         if (roundPixels)
         {
-            this.context.setTransform(
-                mat.a * localResolution,
-                mat.b * localResolution,
-                mat.c * localResolution,
-                mat.d * localResolution,
-                (mat.tx * resolution) | 0,
-                (mat.ty * resolution) | 0
-            );
+            mat.tx = Math.round(mat.tx);
+            mat.ty = Math.round(mat.ty);
         }
-        else
+
+        if (proj)
         {
-            this.context.setTransform(
-                mat.a * localResolution,
-                mat.b * localResolution,
-                mat.c * localResolution,
-                mat.d * localResolution,
-                mat.tx * resolution,
-                mat.ty * resolution
-            );
+            mat.prepend(proj);
         }
+
+        this.context.setTransform(
+            mat.a * localResolution,
+            mat.b * localResolution,
+            mat.c * localResolution,
+            mat.d * localResolution,
+            mat.tx * resolution,
+            mat.ty * resolution
+        );
     }
 
     /**

@@ -1,5 +1,5 @@
 import { Shader, State } from '@pixi/core';
-import { Point, Polygon } from '@pixi/math';
+import { Point, Polygon, Transform } from '@pixi/math';
 import { BLEND_MODES, DRAW_MODES } from '@pixi/constants';
 import { Container } from '@pixi/display';
 import { settings } from '@pixi/settings';
@@ -47,6 +47,7 @@ export class Mesh<T extends Shader = MeshMaterial> extends Container
     private vertexDirty: number;
     private _transformID: number;
     private _roundPixels: boolean;
+    private _roundPixelsID: number;
     private batchUvs: MeshBatchUvs;
 
     // Internal-only properties
@@ -148,9 +149,12 @@ export class Mesh<T extends Shader = MeshMaterial> extends Container
          * Internal roundPixels field
          *
          * @member {boolean}
+         * @default PIXI.settings.ROUND_PIXELS
          * @private
          */
         this._roundPixels = settings.ROUND_PIXELS;
+
+        this._roundPixelsID = -1;
 
         /**
          * Batched UV's are cached for atlas textures
@@ -214,13 +218,13 @@ export class Mesh<T extends Shader = MeshMaterial> extends Container
     }
 
     /**
-     * If true PixiJS will Math.floor() x/y values when rendering, stopping pixel interpolation.
+     * If true PixiJS will Math.round() x/y values when rendering, stopping pixel interpolation.
      * Advantages can include sharper image quality (like text) and faster rendering on canvas.
      * The main disadvantage is movement of objects may appear less smooth.
-     * To set the global default, change {@link PIXI.settings.ROUND_PIXELS}
+     * To set the global default, change {@link PIXI.settings.ROUND_PIXELS}.
      *
      * @member {boolean}
-     * @default false
+     * @default PIXI.settings.ROUND_PIXELS
      */
     set roundPixels(value: boolean)
     {
@@ -314,8 +318,37 @@ export class Mesh<T extends Shader = MeshMaterial> extends Container
 
         renderer.batch.flush();
 
+        let verticesBuffer;
+        let vertices;
+
+        if (this._roundPixels)
+        {
+            verticesBuffer = this.geometry.buffers[0];
+            vertices = verticesBuffer.data;
+
+            this.calculateVertices();
+
+            if (this._roundPixelsID === -1)
+            {
+                verticesBuffer.data = this.vertexData;
+                verticesBuffer._updateID++;
+                this._roundPixelsID = verticesBuffer._updateID;
+                this.vertexDirty = this._roundPixelsID + 1;
+            }
+            else
+            {
+                verticesBuffer.data = this.vertexData;
+                verticesBuffer._updateID = this._roundPixelsID;
+            }
+
+            shader.uniforms.translationMatrix = Transform.IDENTITY.worldTransform.toArray(true);
+        }
+        else
+        {
+            shader.uniforms.translationMatrix = this.transform.worldTransform.toArray(true);
+        }
+
         // bind and sync uniforms..
-        shader.uniforms.translationMatrix = this.transform.worldTransform.toArray(true);
         renderer.shader.bind(shader);
 
         // set state..
@@ -326,6 +359,12 @@ export class Mesh<T extends Shader = MeshMaterial> extends Container
 
         // then render it
         renderer.geometry.draw(this.drawMode, this.size, this.start, this.geometry.instanceCount);
+
+        if (this._roundPixels)
+        {
+            verticesBuffer.data = vertices;
+            verticesBuffer._updateID = this.vertexDirty;
+        }
     }
 
     /**
@@ -383,31 +422,39 @@ export class Mesh<T extends Shader = MeshMaterial> extends Container
         const b = wt.b;
         const c = wt.c;
         const d = wt.d;
-        const tx = wt.tx;
-        const ty = wt.ty;
+        let tx = wt.tx;
+        let ty = wt.ty;
+        let sx;
+        let sy;
+
+        if (this._roundPixels)
+        {
+            sx = Math.sqrt((a * a) + (b * b));
+            sy = Math.sqrt((c * c) + (d * d));
+
+            tx = Math.round(tx);
+            ty = Math.round(ty);
+        }
 
         const vertexData = this.vertexData;
 
         for (let i = 0; i < vertexData.length / 2; i++)
         {
-            const x = vertices[(i * 2)];
-            const y = vertices[(i * 2) + 1];
+            let x = vertices[(i * 2)];
+            let y = vertices[(i * 2) + 1];
+
+            if (this._roundPixels)
+            {
+                x = Math.round(x * sx) / sx;
+                y = Math.round(y * sy) / sy;
+            }
 
             vertexData[(i * 2)] = (a * x) + (c * y) + tx;
             vertexData[(i * 2) + 1] = (b * x) + (d * y) + ty;
         }
 
-        if (this._roundPixels)
-        {
-            const resolution = settings.RESOLUTION;
-
-            for (let i = 0; i < vertexData.length; ++i)
-            {
-                vertexData[i] = Math.round((vertexData[i] * resolution | 0) / resolution);
-            }
-        }
-
         this.vertexDirty = vertexDirtyId;
+        this._roundPixelsID = -1;
     }
 
     /**
