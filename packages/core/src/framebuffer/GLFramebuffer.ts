@@ -36,19 +36,19 @@ export class GLFramebuffer
          * @member {number}
          * @protected
          */
-        this.dirtyId = 0;
+        this.dirtyId = -1;
         /**
          * latest known version of framebuffer format
          * @member {number}
          * @protected
          */
-        this.dirtyFormat = 0;
+        this.dirtyFormat = -1;
         /**
          * latest known version of framebuffer size
          * @member {number}
          * @protected
          */
-        this.dirtySize = 0;
+        this.dirtySize = -1;
 
         /**
          * Detected AA samples number

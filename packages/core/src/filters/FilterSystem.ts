@@ -301,10 +301,7 @@ export class FilterSystem implements ISystem
 
         const lastState = filterStack[filterStack.length - 1];
 
-        if (state.renderTexture.framebuffer.multisample > 1)
-        {
-            this.renderer.framebuffer.blit();
-        }
+        this.renderer.framebuffer.blit();
 
         if (filters.length === 1)
         {
