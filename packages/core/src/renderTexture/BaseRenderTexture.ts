@@ -79,21 +79,21 @@ export class BaseRenderTexture extends BaseTexture
             /* eslint-enable prefer-rest-params */
         }
 
-        super(null, options);
+        options.width = options.width || 100;
+        options.height = options.height || 100;
+        options.multisample = options.multisample !== undefined ? options.multisample : MSAA_QUALITY.NONE;
 
-        const { width, height, multisample } = options || {};
+        super(null, options);
 
         // Set defaults
         this.mipmap = MIPMAP_MODES.OFF;
-        this.width = Math.ceil(width) || 100;
-        this.height = Math.ceil(height) || 100;
         this.valid = true;
 
         this.clearColor = [0, 0, 0, 0];
 
-        this.framebuffer = new Framebuffer(this.width * this.resolution, this.height * this.resolution)
+        this.framebuffer = new Framebuffer(this.realWidth, this.realHeight)
             .addColorTexture(0, this);
-        this.framebuffer.multisample = multisample !== undefined ? multisample : MSAA_QUALITY.NONE;
+        this.framebuffer.multisample = options.multisample;
 
         // TODO - could this be added the systems?
 
@@ -115,14 +115,13 @@ export class BaseRenderTexture extends BaseTexture
     /**
      * Resizes the BaseRenderTexture.
      *
-     * @param {number} width - The width to resize to.
-     * @param {number} height - The height to resize to.
+     * @param {number} desiredWidth - The desired width to resize to.
+     * @param {number} desiredHeight - The desired height to resize to.
      */
-    resize(width: number, height: number): void
+    resize(desiredWidth: number, desiredHeight: number): void
     {
-        width = Math.ceil(width);
-        height = Math.ceil(height);
-        this.framebuffer.resize(width * this.resolution, height * this.resolution);
+        this.framebuffer.resize(desiredWidth * this.resolution, desiredHeight * this.resolution);
+        this.setRealSize(this.framebuffer.width, this.framebuffer.height);
     }
 
     /**

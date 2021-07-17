@@ -117,14 +117,15 @@ export class RenderTexture extends Texture
     /**
      * Resizes the RenderTexture.
      *
-     * @param {number} width - The width to resize to.
-     * @param {number} height - The height to resize to.
+     * @param {number} desiredWidth - The desired width to resize to.
+     * @param {number} desiredHeight - The desired height to resize to.
      * @param {boolean} [resizeBaseTexture=true] - Should the baseTexture.width and height values be resized as well?
      */
-    resize(width: number, height: number, resizeBaseTexture = true): void
+    resize(desiredWidth: number, desiredHeight: number, resizeBaseTexture = true): void
     {
-        width = Math.ceil(width);
-        height = Math.ceil(height);
+        const resolution = this.baseTexture.resolution;
+        const width = Math.round(desiredWidth * resolution) / resolution;
+        const height = Math.round(desiredHeight * resolution) / resolution;
 
         // TODO - could be not required..
         this.valid = (width > 0 && height > 0);

@@ -53,7 +53,6 @@ export class BaseTexture<R extends Resource = Resource, RO = IAutoDetectOptions>
      * The width of the base texture set when the image has loaded
      *
      * @readonly
-     * @default PIXI.settings.RESOLUTION
      */
     public width: number;
 
@@ -67,6 +66,7 @@ export class BaseTexture<R extends Resource = Resource, RO = IAutoDetectOptions>
     /**
      * The resolution / device pixel ratio of the texture
      *
+     * @readonly
      * @default PIXI.settings.RESOLUTION
      */
     public resolution: number;
@@ -126,7 +126,7 @@ export class BaseTexture<R extends Resource = Resource, RO = IAutoDetectOptions>
      * Whether or not the texture is a power of two, try to use power of two textures as much
      * as you can
      *
-     * @readonlys
+     * @readonly
      * @default false
      */
     isPowerOfTwo: boolean;
@@ -254,9 +254,9 @@ export class BaseTexture<R extends Resource = Resource, RO = IAutoDetectOptions>
             resource.internal = true;
         }
 
-        this.width = width || 0;
-        this.height = height || 0;
         this.resolution = resolution || settings.RESOLUTION;
+        this.width = Math.round((width || 0) * this.resolution) / this.resolution;
+        this.height = Math.round((height || 0) * this.resolution) / this.resolution;
         this._mipmap = mipmap !== undefined ? mipmap : settings.MIPMAP_TEXTURES;
         this.anisotropicLevel = anisotropicLevel !== undefined ? anisotropicLevel : settings.ANISOTROPIC_LEVEL;
         this._wrapMode = wrapMode || settings.WRAP_MODE;
@@ -337,7 +337,7 @@ export class BaseTexture<R extends Resource = Resource, RO = IAutoDetectOptions>
      */
     get realWidth(): number
     {
-        return Math.ceil((this.width * this.resolution) - 1e-4);
+        return Math.round(this.width * this.resolution);
     }
 
     /**
@@ -348,7 +348,7 @@ export class BaseTexture<R extends Resource = Resource, RO = IAutoDetectOptions>
      */
     get realHeight(): number
     {
-        return Math.ceil((this.height * this.resolution) - 1e-4);
+        return Math.round(this.height * this.resolution);
     }
 
     /**
@@ -441,20 +441,16 @@ export class BaseTexture<R extends Resource = Resource, RO = IAutoDetectOptions>
     /**
      * Changes w/h/resolution. Texture becomes valid if width and height are greater than zero.
      *
-     * @param {number} width - Visual width
-     * @param {number} height - Visual height
+     * @param {number} desiredWidth - Desired visual width
+     * @param {number} desiredHeight - Desired visual height
      * @param {number} [resolution] - Optionally set resolution
      * @returns {PIXI.BaseTexture} this
      */
-    setSize(width: number, height: number, resolution?: number): this
+    setSize(desiredWidth: number, desiredHeight: number, resolution?: number): this
     {
-        this.resolution = resolution || this.resolution;
-        this.width = width;
-        this.height = height;
-        this._refreshPOT();
-        this.update();
+        resolution = resolution || this.resolution;
 
-        return this;
+        return this.setRealSize(desiredWidth * resolution, desiredHeight * resolution, resolution);
     }
 
     /**
@@ -468,8 +464,8 @@ export class BaseTexture<R extends Resource = Resource, RO = IAutoDetectOptions>
     setRealSize(realWidth: number, realHeight: number, resolution?: number): this
     {
         this.resolution = resolution || this.resolution;
-        this.width = realWidth / this.resolution;
-        this.height = realHeight / this.resolution;
+        this.width = Math.round(realWidth) / this.resolution;
+        this.height = Math.round(realHeight) / this.resolution;
         this._refreshPOT();
         this.update();
 
@@ -505,8 +501,8 @@ export class BaseTexture<R extends Resource = Resource, RO = IAutoDetectOptions>
 
         if (this.valid)
         {
-            this.width = this.width * oldResolution / resolution;
-            this.height = this.height * oldResolution / resolution;
+            this.width = Math.round(this.width * oldResolution) / resolution;
+            this.height = Math.round(this.height * oldResolution) / resolution;
             this.emit('update', this);
         }
 

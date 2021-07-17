@@ -44,8 +44,8 @@ export function generateFillStyle(
     // should also take padding into account, padding can offset the gradient
     const padding = style.padding || 0;
 
-    const width = Math.ceil(canvas.width / resolution) - dropShadowCorrection - (padding * 2);
-    const height = Math.ceil(canvas.height / resolution) - dropShadowCorrection - (padding * 2);
+    const width = (canvas.width / resolution) - dropShadowCorrection - (padding * 2);
+    const height = (canvas.height / resolution) - dropShadowCorrection - (padding * 2);
 
     // make a copy of the style settings, so we can manipulate them later
     const fill = fillStyle.slice();

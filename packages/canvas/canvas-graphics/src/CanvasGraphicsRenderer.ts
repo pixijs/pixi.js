@@ -358,7 +358,7 @@ export class CanvasGraphicsRenderer
                         const radiusOffset = alignmentOffset * (lineStyle.alignment >= 1
                             ? Math.min(sWidth / width, sHeight / height) : Math.min(width / sWidth, height / sHeight));
                         let sRadius = tempShape.radius + radiusOffset;
-                        const sMaxRadius = Math.min(sWidth, sHeight) / 2 | 0;
+                        const sMaxRadius = Math.min(sWidth, sHeight) / 2;
 
                         sRadius = sRadius > sMaxRadius ? sMaxRadius : sRadius;
 
@@ -536,7 +536,7 @@ export class CanvasGraphicsRenderer
         const height = shape.height;
         let radius = shape.radius;
 
-        const maxRadius = Math.min(width, height) / 2 | 0;
+        const maxRadius = Math.min(width, height) / 2;
 
         radius = radius > maxRadius ? maxRadius : radius;
 

@@ -437,12 +437,12 @@ export class CanvasRenderer extends AbstractRenderer
      *
      * @extends PIXI.AbstractRenderer#resize
      *
-     * @param screenWidth - the new width of the screen
-     * @param screenHeight - the new height of the screen
+     * @param desiredScreenWidth - the desired width of the screen
+     * @param desiredScreenHeight - the desired height of the screen
      */
-    public resize(screenWidth: number, screenHeight: number): void
+    public resize(desiredScreenWidth: number, desiredScreenHeight: number): void
     {
-        super.resize(screenWidth, screenHeight);
+        super.resize(desiredScreenWidth, desiredScreenHeight);
 
         // reset the scale mode.. oddly this seems to be reset when the canvas is resized.
         // surely a browser bug?? Let PixiJS fix that for you..

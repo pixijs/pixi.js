@@ -494,14 +494,14 @@ export class Renderer extends AbstractRenderer
     /**
      * Resizes the WebGL view to the specified width and height.
      *
-     * @param screenWidth - The new width of the screen.
-     * @param screenHeight - The new height of the screen.
+     * @param desiredScreenWidth - The desired width of the screen.
+     * @param desiredScreenHeight - The desired height of the screen.
      */
-    resize(screenWidth: number, screenHeight: number): void
+    resize(desiredScreenWidth: number, desiredScreenHeight: number): void
     {
-        super.resize(screenWidth, screenHeight);
+        super.resize(desiredScreenWidth, desiredScreenHeight);
 
-        this.runners.resize.emit(screenWidth, screenHeight);
+        this.runners.resize.emit(this.screen.height, this.screen.width);
     }
 
     /**

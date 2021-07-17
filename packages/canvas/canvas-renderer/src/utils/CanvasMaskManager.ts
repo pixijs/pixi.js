@@ -230,7 +230,7 @@ export class CanvasMaskManager
                 const height = shape.height;
                 let radius = shape.radius;
 
-                const maxRadius = Math.min(width, height) / 2 | 0;
+                const maxRadius = Math.min(width, height) / 2;
 
                 radius = radius > maxRadius ? maxRadius : radius;
 

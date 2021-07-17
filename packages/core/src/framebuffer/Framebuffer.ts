@@ -40,13 +40,13 @@ export class Framebuffer
          * Width of framebuffer in pixels
          * @member {number}
          */
-        this.width = Math.ceil(width || 100);
+        this.width = Math.round(width || 100);
 
         /**
          * Height of framebuffer in pixels
          * @member {number}
          */
-        this.height = Math.ceil(height || 100);
+        this.height = Math.round(height || 100);
 
         this.stencil = false;
         this.depth = false;
@@ -174,8 +174,8 @@ export class Framebuffer
      */
     resize(width: number, height: number): void
     {
-        width = Math.ceil(width);
-        height = Math.ceil(height);
+        width = Math.round(width);
+        height = Math.round(height);
 
         if (width === this.width && height === this.height) return;
 

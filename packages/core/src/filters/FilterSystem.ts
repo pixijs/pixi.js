@@ -274,8 +274,8 @@ export class FilterSystem implements ISystem
         inputSize[2] = 1.0 / inputSize[0];
         inputSize[3] = 1.0 / inputSize[1];
 
-        inputPixel[0] = inputSize[0] * state.resolution;
-        inputPixel[1] = inputSize[1] * state.resolution;
+        inputPixel[0] = Math.round(inputSize[0] * state.resolution);
+        inputPixel[1] = Math.round(inputSize[1] * state.resolution);
         inputPixel[2] = 1.0 / inputPixel[0];
         inputPixel[3] = 1.0 / inputPixel[1];
 

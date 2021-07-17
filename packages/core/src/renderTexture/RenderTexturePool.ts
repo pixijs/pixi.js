@@ -68,8 +68,8 @@ export class RenderTexturePool
      * Gets a Power-of-Two render texture or fullScreen texture
      *
      * @protected
-     * @param {number} minWidth - The minimum width of the render texture in real pixels.
-     * @param {number} minHeight - The minimum height of the render texture in real pixels.
+     * @param {number} minWidth - The minimum width of the render texture.
+     * @param {number} minHeight - The minimum height of the render texture.
      * @param {number} [resolution=1] - The resolution of the render texture.
      * @return {PIXI.RenderTexture} The new render texture.
      */
@@ -77,8 +77,8 @@ export class RenderTexturePool
     {
         let key: number|string = RenderTexturePool.SCREEN_KEY;
 
-        minWidth *= resolution;
-        minHeight *= resolution;
+        minWidth = Math.ceil(minWidth * resolution);
+        minHeight = Math.ceil(minHeight * resolution);
 
         if (!this.enableFullScreen || minWidth !== this._pixelsWidth || minHeight !== this._pixelsHeight)
         {

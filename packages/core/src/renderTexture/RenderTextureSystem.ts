@@ -183,6 +183,8 @@ export class RenderTextureSystem implements ISystem
             viewportFrame.y = renderer.view.height - (viewportFrame.y + viewportFrame.height);
         }
 
+        viewportFrame.ceil();
+
         this.renderer.framebuffer.bind(framebuffer, viewportFrame);
         this.renderer.projection.update(destinationFrame, sourceFrame, resolution, !framebuffer);
 

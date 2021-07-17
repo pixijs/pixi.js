@@ -267,19 +267,23 @@ export abstract class AbstractRenderer extends EventEmitter
     }
 
     /**
-     * Resizes the screen and canvas to the specified width and height.
-     * Canvas dimensions are multiplied by resolution.
+     * Resizes the screen and canvas as close as possible to the specified width and height.
+     * Canvas dimensions are multiplied by resolution and rounded to the nearest integers.
+     * The new canvas dimensions divided by the resolution become the new screen dimensions.
      *
-     * @param screenWidth - The new width of the screen.
-     * @param screenHeight - The new height of the screen.
+     * @param desiredScreenWidth - The desired width of the screen.
+     * @param desiredScreenHeight - The desired height of the screen.
      */
-    resize(screenWidth: number, screenHeight: number): void
+    resize(desiredScreenWidth: number, desiredScreenHeight: number): void
     {
+        this.view.width = Math.round(desiredScreenWidth * this.resolution);
+        this.view.height = Math.round(desiredScreenHeight * this.resolution);
+
+        const screenWidth = this.view.width / this.resolution;
+        const screenHeight = this.view.height / this.resolution;
+
         this.screen.width = screenWidth;
         this.screen.height = screenHeight;
-
-        this.view.width = screenWidth * this.resolution;
-        this.view.height = screenHeight * this.resolution;
 
         if (this.autoDensity)
         {
@@ -320,8 +324,8 @@ export abstract class AbstractRenderer extends EventEmitter
 
         const renderTexture = RenderTexture.create(
             {
-                width: region.width | 0,
-                height: region.height | 0,
+                width: region.width,
+                height: region.height,
                 scaleMode,
                 resolution,
                 multisample,
