@@ -24,9 +24,6 @@
     "dist",
     "*.d.ts"
   ],
-  "dependencies": {
-    "resource-loader": "^3.0.1"
-  },
   "peerDependencies": {
     "@pixi/constants": "6.1.0-rc.4",
     "@pixi/core": "6.1.0-rc.4",

@@ -1,35 +1,32 @@
-import { Resource } from 'resource-loader';
 import { Texture } from '@pixi/core';
-
-import type { ILoaderResource } from './LoaderResource';
+import { LoaderResource } from './LoaderResource';
+import { ILoaderPlugin } from './Loader';
 
 /**
  * Loader plugin for handling Texture resources.
  * @class
- * @memberof PIXI
- * @implements PIXI.ILoaderPlugin
  */
-export class TextureLoader
+export class TextureLoader implements ILoaderPlugin
 {
     /**
      * Handle SVG elements a text, render with SVGResource.
      */
     public static add(): void
     {
-        Resource.setExtensionLoadType('svg', Resource.LOAD_TYPE.XHR);
-        Resource.setExtensionXhrType('svg', Resource.XHR_RESPONSE_TYPE.TEXT);
+        LoaderResource.setExtensionLoadType('svg', LoaderResource.LOAD_TYPE.XHR);
+        LoaderResource.setExtensionXhrType('svg', LoaderResource.XHR_RESPONSE_TYPE.TEXT);
     }
 
     /**
      * Called after a resource is loaded.
      * @see PIXI.Loader.loaderMiddleware
-     * @param {PIXI.LoaderResource} resource
+     * @param resource
      * @param {function} next
      */
-    public static use(resource: ILoaderResource, next: (...args: any[]) => void): void
+    public static use(resource: LoaderResource, next: (...args: any[]) => void): void
     {
         // create a new texture if the data is an Image object
-        if (resource.data && (resource.type === Resource.TYPE.IMAGE || resource.extension === 'svg'))
+        if (resource.data && (resource.type === LoaderResource.TYPE.IMAGE || resource.extension === 'svg'))
         {
             const { data, url, name, metadata } = resource;
 
