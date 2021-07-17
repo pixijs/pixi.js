@@ -2,6 +2,7 @@ import { Shader } from '../shader/Shader';
 import { Program } from '../shader/Program';
 import { State } from '../state/State';
 import { settings } from '@pixi/settings';
+import { MSAA_QUALITY } from '@pixi/constants';
 import defaultVertex from './defaultFilter.vert';
 import defaultFragment from './defaultFilter.frag';
 
@@ -187,6 +188,7 @@ export class Filter extends Shader
 {
     public padding: number;
     public resolution: number;
+    public multisample: MSAA_QUALITY;
     public enabled: boolean;
     public autoFit: boolean;
     /**
@@ -223,6 +225,13 @@ export class Filter extends Shader
          * @member {number}
          */
         this.resolution = settings.FILTER_RESOLUTION;
+
+        /**
+         * The samples of the filter.
+         *
+         * @member {PIXI.MSAA_QUALITY}
+         */
+        this.multisample = settings.FILTER_MULTISAMPLE;
 
         /**
          * If enabled is true the filter is applied, if false it will not.

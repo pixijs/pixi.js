@@ -1,6 +1,7 @@
 import { RenderTexture } from './RenderTexture';
 import { BaseRenderTexture } from './BaseRenderTexture';
 import { nextPow2 } from '@pixi/utils';
+import { MSAA_QUALITY } from '@pixi/constants';
 
 import type { IBaseTextureOptions } from '../textures/BaseTexture';
 import type { ISize } from '@pixi/math';
@@ -51,14 +52,16 @@ export class RenderTexturePool
      *
      * @param {number} realWidth - width of texture in pixels
      * @param {number} realHeight - height of texture in pixels
+     * @param {PIXI.MSAA_QUALITY} [multisample=PIXI.MSAA_QUALITY.NONE] - number of samples of the framebuffer
      * @returns {RenderTexture}
      */
-    createTexture(realWidth: number, realHeight: number): RenderTexture
+    createTexture(realWidth: number, realHeight: number, multisample = MSAA_QUALITY.NONE): RenderTexture
     {
         const baseRenderTexture = new BaseRenderTexture(Object.assign({
             width: realWidth,
             height: realHeight,
             resolution: 1,
+            multisample,
         }, this.textureOptions));
 
         return new RenderTexture(baseRenderTexture);
@@ -71,9 +74,10 @@ export class RenderTexturePool
      * @param {number} minWidth - The minimum width of the render texture in real pixels.
      * @param {number} minHeight - The minimum height of the render texture in real pixels.
      * @param {number} [resolution=1] - The resolution of the render texture.
+     * @param {PIXI.MSAA_QUALITY} [multisample=PIXI.MSAA_QUALITY.NONE] - Number of samples of the render texture.
      * @return {PIXI.RenderTexture} The new render texture.
      */
-    getOptimalTexture(minWidth: number, minHeight: number, resolution = 1): RenderTexture
+    getOptimalTexture(minWidth: number, minHeight: number, resolution = 1, multisample = MSAA_QUALITY.NONE): RenderTexture
     {
         let key: number|string = RenderTexturePool.SCREEN_KEY;
 
@@ -85,6 +89,11 @@ export class RenderTexturePool
             minWidth = nextPow2(minWidth);
             minHeight = nextPow2(minHeight);
             key = ((minWidth & 0xFFFF) << 16) | (minHeight & 0xFFFF);
+
+            if (multisample > 1)
+            {
+                key += multisample * 0x100000000;
+            }
         }
 
         if (!this.texturePool[key])
@@ -96,7 +105,7 @@ export class RenderTexturePool
 
         if (!renderTexture)
         {
-            renderTexture = this.createTexture(minWidth, minHeight);
+            renderTexture = this.createTexture(minWidth, minHeight, multisample);
         }
 
         renderTexture.filterPoolKey = key;
@@ -113,11 +122,13 @@ export class RenderTexturePool
      * @param {PIXI.RenderTexture} input - renderTexture from which size and resolution will be copied
      * @param {number} [resolution] - override resolution of the renderTexture
      *  It overrides, it does not multiply
+     * @param {PIXI.MSAA_QUALITY} [multisample=PIXI.MSAA_QUALITY.NONE] - number of samples of the renderTexture
      * @returns {PIXI.RenderTexture}
      */
-    getFilterTexture(input: RenderTexture, resolution?: number): RenderTexture
+    getFilterTexture(input: RenderTexture, resolution?: number, multisample?: MSAA_QUALITY): RenderTexture
     {
-        const filterTexture = this.getOptimalTexture(input.width, input.height, resolution || input.resolution);
+        const filterTexture = this.getOptimalTexture(input.width, input.height, resolution || input.resolution,
+            multisample || MSAA_QUALITY.NONE);
 
         filterTexture.filterFrame = input.filterFrame;
 

@@ -1,4 +1,5 @@
 import { Matrix, Rectangle } from '@pixi/math';
+import { MSAA_QUALITY } from '@pixi/constants';
 
 import type { Filter } from './Filter';
 import type { IFilterTarget } from './IFilterTarget';
@@ -16,6 +17,7 @@ export class FilterState
     target: IFilterTarget;
     legacy: boolean;
     resolution: number;
+    multisample: MSAA_QUALITY;
     sourceFrame: Rectangle;
     destinationFrame: Rectangle;
     bindingSourceFrame: Rectangle;
@@ -50,6 +52,14 @@ export class FilterState
          * @private
          */
         this.resolution = 1;
+
+        /**
+         * Number of samples
+         * @member {PIXI.MSAA_QUALITY}
+         * @default MSAA_QUALITY.NONE
+         * @private
+         */
+        this.multisample = MSAA_QUALITY.NONE;
 
         // next three fields are created only for root
         // re-assigned for everything else
