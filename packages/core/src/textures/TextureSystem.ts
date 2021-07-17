@@ -315,6 +315,11 @@ export class TextureSystem implements ISystem
         {
             glTexture.type = texture.type;
         }
+
+        if (this.webGLVersion === 2 && texture.internalFormat)
+        {
+            glTexture.internalFormat = texture.internalFormat;
+        }
     }
 
     /**

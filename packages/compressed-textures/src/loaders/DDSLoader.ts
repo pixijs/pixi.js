@@ -1,5 +1,6 @@
 import { CompressedTextureResource } from '../resources';
-import { INTERNAL_FORMATS, INTERNAL_FORMAT_TO_BYTES_PER_PIXEL } from '../const';
+import { INTERNAL_FORMAT_TO_BYTES_PER_PIXEL } from '../const';
+import { INTERNAL_FORMATS } from '@pixi/constants';
 import { LoaderResource } from '@pixi/loaders';
 import { registerCompressedTextures } from './registerCompressedTextures';
 

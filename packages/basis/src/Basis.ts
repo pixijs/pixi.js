@@ -1,5 +1,4 @@
-import { TYPES } from '@pixi/constants';
-import { INTERNAL_FORMATS } from '@pixi/compressed-textures';
+import { INTERNAL_FORMATS, TYPES } from '@pixi/constants';
 
 /**
  * The transcoding formats provided by basis_universal.

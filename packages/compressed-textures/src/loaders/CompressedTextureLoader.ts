@@ -2,7 +2,7 @@ import { LoaderResource } from '@pixi/loaders';
 import { url } from '@pixi/utils';
 
 import type { Loader, ILoaderResource } from '@pixi/loaders';
-import type { INTERNAL_FORMATS } from '../const';
+import type { INTERNAL_FORMATS } from '@pixi/constants';
 
 /**
  * Schema for compressed-texture manifests

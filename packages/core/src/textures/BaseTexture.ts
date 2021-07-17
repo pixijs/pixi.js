@@ -1,5 +1,6 @@
 import { BaseTextureCache, EventEmitter, isPow2, TextureCache, uid } from '@pixi/utils';
-import { FORMATS, SCALE_MODES, TARGETS, TYPES, ALPHA_MODES, MIPMAP_MODES, WRAP_MODES } from '@pixi/constants';
+import { FORMATS, SCALE_MODES, TARGETS, TYPES, ALPHA_MODES, MIPMAP_MODES, WRAP_MODES,
+    INTERNAL_FORMATS } from '@pixi/constants';
 import { Resource } from './resources/Resource';
 import { BufferResource } from './resources/BufferResource';
 import { autoDetectResource } from './resources/autoDetectResource';
@@ -25,6 +26,7 @@ export interface IBaseTextureOptions<RO = any> {
     width?: number;
     height?: number;
     wrapMode?: WRAP_MODES;
+    internalFormat?: INTERNAL_FORMATS;
     format?: FORMATS;
     type?: TYPES;
     target?: TARGETS;
@@ -86,6 +88,13 @@ export class BaseTexture<R extends Resource = Resource, RO = IAutoDetectOptions>
      * @default PIXI.settings.ANISOTROPIC_LEVEL
      */
     public anisotropicLevel?: number;
+
+    /**
+     * The internal format of the texture
+     *
+     * @member {PIXI.INTERNAL_FORMATS}
+     */
+    public internalFormat?: INTERNAL_FORMATS;
 
     /**
      * The pixel format of the texture
@@ -228,6 +237,7 @@ export class BaseTexture<R extends Resource = Resource, RO = IAutoDetectOptions>
      * @param {number} [options.anisotropicLevel=PIXI.settings.ANISOTROPIC_LEVEL] - Anisotropic filtering level of texture
      * @param {PIXI.WRAP_MODES} [options.wrapMode=PIXI.settings.WRAP_MODE] - Wrap mode for textures
      * @param {PIXI.SCALE_MODES} [options.scaleMode=PIXI.settings.SCALE_MODE] - Default scale mode, linear, nearest
+     * @param {PIXI.INTERNAL_FORMATS} [options.internalFormat] - GL internal format type
      * @param {PIXI.FORMATS} [options.format=PIXI.FORMATS.RGBA] - GL format type
      * @param {PIXI.TYPES} [options.type=PIXI.TYPES.UNSIGNED_BYTE] - GL data type
      * @param {PIXI.TARGETS} [options.target=PIXI.TARGETS.TEXTURE_2D] - GL texture target
@@ -245,7 +255,7 @@ export class BaseTexture<R extends Resource = Resource, RO = IAutoDetectOptions>
         options = options || {};
 
         const { alphaMode, mipmap, anisotropicLevel, scaleMode, width, height,
-            wrapMode, format, type, target, resolution, resourceOptions } = options;
+            wrapMode, internalFormat, format, type, target, resolution, resourceOptions } = options;
 
         // Convert the resource to a Resource object
         if (resource && !(resource instanceof Resource))
@@ -261,6 +271,7 @@ export class BaseTexture<R extends Resource = Resource, RO = IAutoDetectOptions>
         this.anisotropicLevel = anisotropicLevel !== undefined ? anisotropicLevel : settings.ANISOTROPIC_LEVEL;
         this._wrapMode = wrapMode || settings.WRAP_MODE;
         this._scaleMode = scaleMode !== undefined ? scaleMode : settings.SCALE_MODE;
+        this.internalFormat = internalFormat;
         this.format = format || FORMATS.RGBA;
         this.type = type || TYPES.UNSIGNED_BYTE;
         this.target = target || TARGETS.TEXTURE_2D;

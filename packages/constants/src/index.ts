@@ -192,6 +192,190 @@ export enum FORMATS {
 }
 
 /**
+ * Various GL internal formats for textures/resources,
+ * including compressed texture formats provided by extensions.
+ *
+ * @memberof PIXI
+ * @static
+ * @name INTERNAL_FORMATS
+ * @enum {number}
+ * @property {number} R8=33321
+ * @property {number} R8_SNORM=36756
+ * @property {number} RG8=33323
+ * @property {number} RG8_SNORM=36757
+ * @property {number} RGB8=32849
+ * @property {number} RGB8_SNORM=36758
+ * @property {number} RGB565=36194
+ * @property {number} RGBA4=32854
+ * @property {number} RGB5_A1=32855
+ * @property {number} RGBA8=32856
+ * @property {number} RGBA8_SNORM=36759
+ * @property {number} RGB10_A2=32857
+ * @property {number} RGB10_A2UI=36975
+ * @property {number} SRGB8=35905
+ * @property {number} SRGB8_ALPHA8=35907
+ * @property {number} R16F=33325
+ * @property {number} RG16F=33327
+ * @property {number} RGB16F=34843
+ * @property {number} RGBA16F=34842
+ * @property {number} R32F=33326
+ * @property {number} RG32F=33328
+ * @property {number} RGB32F=34837
+ * @property {number} RGBA32F=34836
+ * @property {number} R11F_G11F_B10F=35898
+ * @property {number} RGB9_E5=35901
+ * @property {number} R8I=33329
+ * @property {number} R8UI=33330
+ * @property {number} R16I=33331
+ * @property {number} R16UI=33332
+ * @property {number} R32I=33333
+ * @property {number} R32UI=33334
+ * @property {number} RG8I=33335
+ * @property {number} RG8UI=33336
+ * @property {number} RG16I=33337
+ * @property {number} RG16UI=33338
+ * @property {number} RG32I=33339
+ * @property {number} RG32UI=33340
+ * @property {number} RGB8I=36239
+ * @property {number} RGB8UI=36221
+ * @property {number} RGB16I=36233
+ * @property {number} RGB16UI=36215
+ * @property {number} RGB32I=36227
+ * @property {number} RGB32UI=36209
+ * @property {number} RGBA8I=36238
+ * @property {number} RGBA8UI=36220
+ * @property {number} RGBA16I=36232
+ * @property {number} RGBA16UI=36214
+ * @property {number} RGBA32I=36226
+ * @property {number} RGBA32UI=36208
+ * @property {number} DEPTH_COMPONENT16=33189
+ * @property {number} DEPTH_COMPONENT24=33190
+ * @property {number} DEPTH_COMPONENT32F=36012
+ * @property {number} DEPTH24_STENCIL8=35056
+ * @property {number} DEPTH32F_STENCIL8=36013
+ * @property {number} COMPRESSED_RGB_S3TC_DXT1_EXT=0x83F0
+ * @property {number} COMPRESSED_RGBA_S3TC_DXT1_EXT=0x83F1
+ * @property {number} COMPRESSED_RGBA_S3TC_DXT3_EXT=0x83F2
+ * @property {number} COMPRESSED_RGBA_S3TC_DXT5_EXT=0x83F3
+ * @property {number} COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT=35917
+ * @property {number} COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT=35918
+ * @property {number} COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT=35919
+ * @property {number} COMPRESSED_SRGB_S3TC_DXT1_EXT=35916
+ * @property {number} COMPRESSED_R11_EAC=0x9270
+ * @property {number} COMPRESSED_SIGNED_R11_EAC=0x9271
+ * @property {number} COMPRESSED_RG11_EAC=0x9272
+ * @property {number} COMPRESSED_SIGNED_RG11_EAC=0x9273
+ * @property {number} COMPRESSED_RGB8_ETC2=0x9274
+ * @property {number} COMPRESSED_RGBA8_ETC2_EAC=0x9278
+ * @property {number} COMPRESSED_SRGB8_ETC2=0x9275
+ * @property {number} COMPRESSED_SRGB8_ALPHA8_ETC2_EAC=0x9279
+ * @property {number} COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2=0x9276
+ * @property {number} COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2=0x9277
+ * @property {number} COMPRESSED_RGB_PVRTC_4BPPV1_IMG=0x8C00
+ * @property {number} COMPRESSED_RGBA_PVRTC_4BPPV1_IMG=0x8C02
+ * @property {number} COMPRESSED_RGB_PVRTC_2BPPV1_IMG=0x8C01
+ * @property {number} COMPRESSED_RGBA_PVRTC_2BPPV1_IMG=0x8C03
+ * @property {number} COMPRESSED_RGB_ETC1_WEBGL=0x8D64
+ * @property {number} COMPRESSED_RGB_ATC_WEBGL=0x8C92
+ * @property {number} COMPRESSED_RGBA_ATC_EXPLICIT_ALPHA_WEBGL=0x8C92
+ * @property {number} COMPRESSED_RGBA_ATC_INTERPOLATED_ALPHA_WEBGL=0x87EE
+ */
+export enum INTERNAL_FORMATS {
+    R8 = 33321,
+    R8_SNORM = 36756,
+    RG8 = 33323,
+    RG8_SNORM = 36757,
+    RGB8 = 32849,
+    RGB8_SNORM = 36758,
+    RGB565 = 36194,
+    RGBA4 = 32854,
+    RGB5_A1 = 32855,
+    RGBA8 = 32856,
+    RGBA8_SNORM = 36759,
+    RGB10_A2 = 32857,
+    RGB10_A2UI = 36975,
+    SRGB8 = 35905,
+    SRGB8_ALPHA8 = 35907,
+    R16F = 33325,
+    RG16F = 33327,
+    RGB16F = 34843,
+    RGBA16F = 34842,
+    R32F = 33326,
+    RG32F = 33328,
+    RGB32F = 34837,
+    RGBA32F = 34836,
+    R11F_G11F_B10F = 35898,
+    RGB9_E5 = 35901,
+    R8I = 33329,
+    R8UI = 33330,
+    R16I = 33331,
+    R16UI = 33332,
+    R32I = 33333,
+    R32UI = 33334,
+    RG8I = 33335,
+    RG8UI = 33336,
+    RG16I = 33337,
+    RG16UI = 33338,
+    RG32I = 33339,
+    RG32UI = 33340,
+    RGB8I = 36239,
+    RGB8UI = 36221,
+    RGB16I = 36233,
+    RGB16UI = 36215,
+    RGB32I = 36227,
+    RGB32UI = 36209,
+    RGBA8I = 36238,
+    RGBA8UI = 36220,
+    RGBA16I = 36232,
+    RGBA16UI = 36214,
+    RGBA32I = 36226,
+    RGBA32UI = 36208,
+    DEPTH_COMPONENT16 = 33189,
+    DEPTH_COMPONENT24 = 33190,
+    DEPTH_COMPONENT32F = 36012,
+    DEPTH24_STENCIL8 = 35056,
+    DEPTH32F_STENCIL8 = 36013,
+
+    // WEBGL_compressed_texture_s3tc
+    COMPRESSED_RGB_S3TC_DXT1_EXT = 0x83F0,
+    COMPRESSED_RGBA_S3TC_DXT1_EXT = 0x83F1,
+    COMPRESSED_RGBA_S3TC_DXT3_EXT = 0x83F2,
+    COMPRESSED_RGBA_S3TC_DXT5_EXT = 0x83F3,
+
+    // WEBGL_compressed_texture_s3tc_srgb
+    COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT = 35917,
+    COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT = 35918,
+    COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT = 35919,
+    COMPRESSED_SRGB_S3TC_DXT1_EXT = 35916,
+
+    // WEBGL_compressed_texture_etc
+    COMPRESSED_R11_EAC = 0x9270,
+    COMPRESSED_SIGNED_R11_EAC = 0x9271,
+    COMPRESSED_RG11_EAC = 0x9272,
+    COMPRESSED_SIGNED_RG11_EAC = 0x9273,
+    COMPRESSED_RGB8_ETC2 = 0x9274,
+    COMPRESSED_RGBA8_ETC2_EAC = 0x9278,
+    COMPRESSED_SRGB8_ETC2 = 0x9275,
+    COMPRESSED_SRGB8_ALPHA8_ETC2_EAC = 0x9279,
+    COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2 = 0x9276,
+    COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2 = 0x9277,
+
+    // WEBGL_compressed_texture_pvrtc
+    COMPRESSED_RGB_PVRTC_4BPPV1_IMG = 0x8C00,
+    COMPRESSED_RGBA_PVRTC_4BPPV1_IMG = 0x8C02,
+    COMPRESSED_RGB_PVRTC_2BPPV1_IMG = 0x8C01,
+    COMPRESSED_RGBA_PVRTC_2BPPV1_IMG = 0x8C03,
+
+    // WEBGL_compressed_texture_etc1
+    COMPRESSED_RGB_ETC1_WEBGL = 0x8D64,
+
+    // WEBGL_compressed_texture_atc
+    COMPRESSED_RGB_ATC_WEBGL = 0x8C92,
+    COMPRESSED_RGBA_ATC_EXPLICIT_ALPHA_WEBGL = 0x8C92, // TODO: Probably a bug on the MDN site
+    COMPRESSED_RGBA_ATC_INTERPOLATED_ALPHA_WEBGL = 0x87EE,
+}
+
+/**
  * Various GL target types.
  *
  * @memberof PIXI
