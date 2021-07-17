@@ -38,7 +38,7 @@ export class DepthResource extends BufferResource
                 width,
                 height,
                 baseTexture.format,
-                baseTexture.type,
+                glTexture.type,
                 this.data,
             );
         }
@@ -50,13 +50,12 @@ export class DepthResource extends BufferResource
             gl.texImage2D(
                 baseTexture.target,
                 0,
-                //  gl.DEPTH_COMPONENT16 Needed for depth to render properly in webgl2.0
-                renderer.context.webGLVersion === 1 ? gl.DEPTH_COMPONENT : gl.DEPTH_COMPONENT16,
+                glTexture.internalFormat,
                 width,
                 height,
                 0,
                 baseTexture.format,
-                baseTexture.type,
+                glTexture.type,
                 this.data,
             );
         }
